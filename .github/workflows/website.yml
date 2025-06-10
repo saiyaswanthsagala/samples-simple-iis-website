@@ -27,8 +27,11 @@ jobs:
       - name: Package build output
         run: |
           mkdir output
-          powershell Get-ChildItem -Path .\bin\Release\* -Recurse
-          powershell Compress-Archive -Path .\bin\Release\* -DestinationPath output/SimpleIISWebApp.zip
+          $date = Get-Date -Format "yyyyMMdd"
+          $version = "$date.${{ github.run_number }}"
+          $zipName = "SimpleIISWebApp.$version.zip"
+          powershell Compress-Archive -Path .\bin\Release\* -DestinationPath output\$zipName
+          echo "ZIP_NAME=$zipName" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Push package to Octopus Deploy
         uses: OctopusDeploy/push-package-action@v3

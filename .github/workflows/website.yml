@@ -38,5 +38,5 @@ jobs:
         with:
           api_key: API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5
           server: https://sai.octopus.app
-          packages: output/SimpleIISWebApp.zip
+          packages: output/${{ env.ZIP_NAME }}
           space: Default

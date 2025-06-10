@@ -22,7 +22,7 @@ jobs:
         run: nuget restore samples-simple-iis-website.sln
 
       - name: Build solution
-        run: msbuild samples-simple-iis-website.sln /p:Configuration=Release /p:Platform="AnyCPU"
+        run: msbuild samples-simple-iis-website.sln /p:Configuration=Debug /p:Platform="AnyCPU"
 
       - name: Package build output
         run: |

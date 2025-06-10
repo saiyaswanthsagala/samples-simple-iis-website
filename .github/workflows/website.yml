@@ -1,0 +1,36 @@
+name: Build and Push to Octopus Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore samples-simple-iis-website.sln
+
+      - name: Build solution
+        run: msbuild samples-simple-iis-website.sln /p:Configuration=Release /p:Platform="AnyCPU"
+
+      - name: Package build output
+        run: |
+          mkdir output
+          powershell Compress-Archive -Path .\samples-simple-iis-website\bin\Release\* -DestinationPath output/SimpleIISWebApp.zip
+
+      - name: Push package to Octopus Deploy
+        uses: OctopusDeploy/push-package-action@v3
+        with:
+          api_key: API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5
+          server: https://sai.octopus.app
+          package: output/SimpleIISWebApp.zip

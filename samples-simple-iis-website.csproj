@@ -25,5 +25,12 @@
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
   </ItemGroup>
+    <ItemGroup>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

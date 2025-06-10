@@ -27,6 +27,7 @@ jobs:
       - name: Package build output
         run: |
           mkdir output
+          powershell Get-ChildItem -Path .\samples-simple-iis-website\bin\Release\* -Recurse
           powershell Compress-Archive -Path .\samples-simple-iis-website\bin\Release\* -DestinationPath output/SimpleIISWebApp.zip
 
       - name: Push package to Octopus Deploy

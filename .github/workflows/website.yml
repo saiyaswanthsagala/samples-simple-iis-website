@@ -30,7 +30,7 @@ jobs:
           $date = Get-Date -Format "yyyyMMdd"
           $version = "$date.${{ github.run_number }}"
           $zipName = "SimpleIISWebApp.$version.zip"
-          powershell Compress-Archive -Path .\samples-simple-iis-website\* -DestinationPath output\$zipName
+          powershell Compress-Archive -Path * -DestinationPath output\$zipName
           echo "ZIP_NAME=$zipName" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Push package to Octopus Deploy

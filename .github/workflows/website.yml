@@ -44,11 +44,34 @@ jobs:
           space: Default
 
       - name: Install Octopus CLI
+        shell: pwsh
         run: |
-          curl -L https://github.com/OctopusDeploy/OctopusCLI/releases/latest/download/OctopusTools-linux-x64.tar.gz | tar xvz
-          sudo mv octo /usr/local/bin
+          Invoke-WebRequest -Uri "https://github.com/OctopusDeploy/OctopusCLI/releases/latest/download/OctopusTools-windows-x64.zip" -OutFile "octo.zip"
+          Expand-Archive .\octo.zip -DestinationPath .
+          $env:Path += ";$PWD"
+          Write-Output "Octopus CLI installed."
 
-      - name: Create release in Octopus Deploy
+      - name: Create release in Octopus
+        shell: pwsh
         run: |
-          octo create-release --project "WebApps" --version ${{ env.ZIP_NAME }} --server https://sai.octopus.app --apiKey API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5 --space "Default"
-          octo deploy-release --project "WebApps" --version ${{ env.ZIP_NAME }} --deployto "Learn" --server https://sai.octopus.app --apiKey API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5 --space "Default"
+          .\octo.exe create-release `
+            --server "https://sai.octopus.app" `
+            --apiKey "API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5" `
+            --project "WebApps" `
+            --releaseNumber "${{ env.ZIP_NAME }}" `
+            --packageVersion "${{ env.ZIP_NAME }}" `
+            --deployTo "Development"
+        env:
+          OCTOPUS_CLI_AUTO_ACCEPT_PROMPTS: "true"
+
+      - name: Deploy release to environment
+        shell: pwsh
+        run: |
+          .\octo.exe deploy-release `
+            --server "https://sai.octopus.app" `
+            --apiKey "API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5" `
+            --project "WebApps" `
+            --releaseNumber "${{ env.ZIP_NAME }}" `
+            --deployTo "Learn" `
+            --progress `
+            --waitForDeployment

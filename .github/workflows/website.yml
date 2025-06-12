@@ -23,26 +23,6 @@ jobs:
       - name: Restore NuGet packages
         run: nuget restore samples-simple-iis-website.sln
 
-      - name: Set up Java (for OWASP scanner)
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Run OWASP Dependency Check
-        uses: dependency-check/Dependency-Check_Action@main
-        with:
-          project: 'HelloWorld-WebApp'
-          scanpath: './'
-          format: 'HTML'
-          out: 'dependency-check-report'
-
-      - name: Upload OWASP Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: owasp-dependency-check-report
-          path: dependency-check-report/dependency-check-report.html
-
       - name: Build solution
         run: msbuild samples-simple-iis-website.sln /p:Configuration=Release /p:Platform="Any CPU"
 

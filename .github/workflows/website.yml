@@ -50,7 +50,7 @@ jobs:
           server: https://sai.octopus.app
           project: WebApps
           space: Default
-          version: ${{ env.ZIP_NAME }}
+          release_number: ${{ env.ZIP_NAME }}
           release_notes: "Release created from GitHub Actions on ${{ github.run_id }}"
 
       - name: Create deployment in Octopus Deploy
@@ -60,6 +60,5 @@ jobs:
           server: https://sai.octopus.app
           project: WebApps
           space: Default
-          release_version: ${{ env.ZIP_NAME }}
-          deploy_to_environment: Learn
-          wait_for_deployment: true
+          release_number: ${{ env.ZIP_NAME }}
+          environments: Learn

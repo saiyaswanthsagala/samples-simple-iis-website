@@ -42,3 +42,13 @@ jobs:
           server: https://sai.octopus.app
           packages: output/${{ env.ZIP_NAME }}
           space: Default
+
+      - name: Install Octopus CLI
+        run: |
+          curl -L https://github.com/OctopusDeploy/OctopusCLI/releases/latest/download/OctopusTools-linux-x64.tar.gz | tar xvz
+          sudo mv octo /usr/local/bin
+
+      - name: Create release in Octopus Deploy
+        run: |
+          octo create-release --project "WebApps" --version ${{ env.ZIP_NAME }} --server https://sai.octopus.app --apiKey API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5 --space "Default"
+          octo deploy-release --project "WebApps" --version ${{ env.ZIP_NAME }} --deployto "Learn" --server https://sai.octopus.app --apiKey API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5 --space "Default"

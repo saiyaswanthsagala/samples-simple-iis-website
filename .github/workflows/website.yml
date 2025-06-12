@@ -54,7 +54,7 @@ jobs:
           release_notes: "Release created from GitHub Actions on ${{ github.run_id }}"
 
       - name: Create deployment in Octopus Deploy
-        uses: OctopusDeploy/create-deployment-action@v3
+        uses: OctopusDeploy/deploy-release-action@v3
         with:
           api_key: API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5
           server: https://sai.octopus.app

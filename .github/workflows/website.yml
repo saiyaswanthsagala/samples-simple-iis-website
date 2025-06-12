@@ -43,35 +43,14 @@ jobs:
           packages: output/${{ env.ZIP_NAME }}
           space: Default
 
-      - name: Install Octopus CLI
-        shell: pwsh
-        run: |
-          Invoke-WebRequest -Uri "https://github.com/OctopusDeploy/OctopusCLI/releases/latest/download/OctopusTools-windows-x64.zip" -OutFile "octo.zip"
-          Expand-Archive .\octo.zip -DestinationPath .
-          $env:Path += ";$PWD"
-          Write-Output "Octopus CLI installed."
-
-      - name: Create release in Octopus
-        shell: pwsh
-        run: |
-          .\octo.exe create-release `
-            --server "https://sai.octopus.app" `
-            --apiKey "API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5" `
-            --project "WebApps" `
-            --releaseNumber "${{ env.ZIP_NAME }}" `
-            --packageVersion "${{ env.ZIP_NAME }}" `
-            --deployTo "Development"
-        env:
-          OCTOPUS_CLI_AUTO_ACCEPT_PROMPTS: "true"
-
-      - name: Deploy release to environment
-        shell: pwsh
-        run: |
-          .\octo.exe deploy-release `
-            --server "https://sai.octopus.app" `
-            --apiKey "API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5" `
-            --project "WebApps" `
-            --releaseNumber "${{ env.ZIP_NAME }}" `
-            --deployTo "Learn" `
-            --progress `
-            --waitForDeployment
+      - name: Trigger deployment in Octopus Deploy
+        uses: OctopusDeploy/create-release-action@v3
+        with:
+          api_key: API-DCNWIANX9TZEDGSQZ76VIICEWXJ2HM5
+          server: https://sai.octopus.app
+          project: WebApps
+          space: Default
+          version: ${{ env.ZIP_NAME }}
+          deploy_to_environment: Learn
+          wait_for_deployment: true
+          release_notes: "Release created from GitHub Actions on ${{ github.run_id }}"
